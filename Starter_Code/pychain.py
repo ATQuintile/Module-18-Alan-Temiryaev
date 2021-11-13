@@ -192,12 +192,20 @@ if st.button("Add Block"):
     # Update `new_block` so that `Block` consists of an attribute named `record`
     # which is set equal to a `Record` that contains the `sender`, `receiver`,
     # and `amount` values
+#   new_block = Block(
+#         data=input_data,
+#         creator_id=42,
+#         prev_hash=prev_block_hash
+#    )
+   
     new_block = Block(
-        data=input_data,
+        record=Record
+        (sender=input_sender_data,
+        receiver=input_receiver_data,
+        amount=input_amount_data),
         creator_id=42,
         prev_hash=prev_block_hash
     )
-
     pychain.add_block(new_block)
     st.balloons()
 
@@ -207,21 +215,25 @@ if st.button("Add Block"):
 st.markdown("## The PyChain Ledger")
 
 pychain_df = pd.DataFrame(pychain.chain)
-st.write(pychain_df)
+st.write(pychain_df) #.to_records()
 
 difficulty = st.sidebar.slider("Block Difficulty", 1, 5, 2)
 pychain.difficulty = difficulty
 
-st.sidebar.write("# Block Inspector")
+# Because the 'write' command has not been implemented on the sidebar yet,
+# instead we can use 'title' and 'markdown' commands.
+
+st.sidebar.title("Block Inspector")
 selected_block = st.sidebar.selectbox(
     "Which block would you like to see?", pychain.chain
 )
 
-st.sidebar.write(selected_block)
+# Selected blocks from the select box shown below th selectbox. 
+st.sidebar.markdown(selected_block)
 
-if st.button("Validate Chain"):
-    st.write(pychain.is_valid())
-
+# We use the validate button to show if its valid. 
+if st.sidebar.button("Validate Chain"):
+    st.sidebar.markdown(pychain.is_valid())
 ################################################################################
 # Step 4:
 # Test the PyChain Ledger by Storing Records
